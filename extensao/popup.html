@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 260px;
+      background: #0d0d0d;
+      color: #e8e8e8;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .topo {
+      background: #141414;
+      border-bottom: 1px solid #1e1e1e;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-icon {
+      width: 28px;
+      height: 28px;
+      background: #ff3d00;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.05em;
+    }
+
+    .logo-sub {
+      font-size: 9px;
+      color: #555;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 1px;
+    }
+
+    .corpo {
+      padding: 14px 16px;
+    }
+
+    .secao-titulo {
+      font-size: 9px;
+      color: #555;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .status-servidor {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      background: #141414;
+      border: 1px solid #1e1e1e;
+      border-radius: 3px;
+      margin-bottom: 14px;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #333;
+      flex-shrink: 0;
+      transition: all 0.3s;
+    }
+
+    .dot.online { background: #00e676; box-shadow: 0 0 6px #00e676; }
+    .dot.offline { background: #ff1744; }
+    .dot.checando { background: #ff6d00; animation: piscar 1s infinite; }
+
+    @keyframes piscar { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    .status-texto {
+      font-size: 10px;
+      color: #888;
+    }
+
+    .status-texto span {
+      color: #e8e8e8;
+      display: block;
+      font-size: 11px;
+    }
+
+    .cmd-box {
+      background: #0a0a0a;
+      border: 1px solid #1e1e1e;
+      border-left: 2px solid #ff3d00;
+      border-radius: 2px;
+      padding: 10px 12px;
+      margin-bottom: 14px;
+    }
+
+    .cmd-label {
+      font-size: 9px;
+      color: #555;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .cmd-linha {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .cmd-prompt {
+      color: #ff3d00;
+      font-size: 11px;
+    }
+
+    .cmd-text {
+      font-size: 10px;
+      color: #aaa;
+      letter-spacing: 0.02em;
+    }
+
+    .btn-verificar {
+      width: 100%;
+      padding: 8px;
+      background: #1e1e1e;
+      border: 1px solid #2a2a2a;
+      border-radius: 2px;
+      color: #888;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-verificar:hover {
+      background: #252525;
+      color: #e8e8e8;
+      border-color: #3a3a3a;
+    }
+
+    .rodape {
+      border-top: 1px solid #1a1a1a;
+      padding: 8px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .versao {
+      font-size: 9px;
+      color: #333;
+    }
+
+    .pasta-link {
+      font-size: 9px;
+      color: #555;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+    }
+
+    .pasta-link:hover { color: #ff3d00; }
+  </style>
+</head>
+<body>
+  <div class="topo">
+    <div class="logo-icon">▼</div>
+    <div>
+      <div class="logo-text">BaixaTube</div>
+      <div class="logo-sub">YouTube Downloader</div>
+    </div>
+  </div>
+
+  <div class="corpo">
+    <div class="secao-titulo">Status do Servidor</div>
+
+    <div class="status-servidor">
+      <div class="dot checando" id="dot"></div>
+      <div class="status-texto">
+        <span id="status-titulo">Verificando...</span>
+        <span id="status-sub" style="font-size:9px;color:#555;margin-top:2px;">localhost:9999</span>
+      </div>
+    </div>
+
+    <div class="cmd-box">
+      <div class="cmd-label">Como iniciar o servidor</div>
+      <div class="cmd-linha">
+        <span class="cmd-prompt">$</span>
+        <span class="cmd-text">cd baixatube/servidor</span>
+      </div>
+      <div class="cmd-linha">
+        <span class="cmd-prompt">$</span>
+        <span class="cmd-text">pip install -r requirements.txt</span>
+      </div>
+      <div class="cmd-linha">
+        <span class="cmd-prompt">$</span>
+        <span class="cmd-text">python servidor.py</span>
+      </div>
+    </div>
+
+    <button class="btn-verificar" id="btn-verificar">↻ Verificar Conexão</button>
+  </div>
+
+  <div class="rodape">
+    <span class="versao">v1.0.0</span>
+    <span class="versao" style="color:#333">BaixaTube © 2026</span>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
