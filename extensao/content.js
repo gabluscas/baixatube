@@ -5,16 +5,26 @@ const SERVIDOR = 'http://localhost:9999';
 
 let painelInjetado = false;
 
+function isShort() {
+  return window.location.pathname.startsWith('/shorts/');
+}
+
 function getVideoInfo() {
   const titulo = document.title.replace(' - YouTube', '').trim();
   const url = window.location.href;
-  const videoId = new URLSearchParams(window.location.search).get('v');
+  let videoId = null;
+  if (isShort()) {
+    videoId = window.location.pathname.split('/shorts/')[1]?.split('?')[0];
+  } else {
+    videoId = new URLSearchParams(window.location.search).get('v');
+  }
   const thumb = videoId ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg` : '';
   return { titulo, url, videoId, thumb };
 }
 
 function criarPainel() {
-  if (painelInjetado || !window.location.search.includes('v=')) return;
+  const ehShort = isShort();
+  if (painelInjetado || (!window.location.search.includes('v=') && !ehShort)) return;
 
   const info = getVideoInfo();
 
@@ -63,8 +73,21 @@ function criarPainel() {
     </div>
   `;
 
-  // Injeta logo abaixo do player
-  const alvo = document.querySelector('#below') || document.querySelector('#secondary') || document.body;
+  // Injeta no lugar certo dependendo do tipo de página
+  let alvo;
+  if (ehShort) {
+    alvo = document.querySelector('ytd-shorts')
+        || document.querySelector('#shorts-container')
+        || document.querySelector('ytd-page-manager')
+        || document.body;
+    painel.style.position = 'fixed';
+    painel.style.bottom = '80px';
+    painel.style.right = '16px';
+    painel.style.width = '300px';
+    painel.style.zIndex = '9999';
+  } else {
+    alvo = document.querySelector('#below') || document.querySelector('#secondary') || document.body;
+  }
   alvo.prepend(painel);
   painelInjetado = true;
 
@@ -182,4 +205,5 @@ const observer = new MutationObserver(() => {
 observer.observe(document.body, { childList: true, subtree: true });
 
 // Inicializa
-setTimeout(criarPainel, 2000);
+const ehShortInicial = window.location.pathname.startsWith('/shorts/');
+setTimeout(criarPainel, ehShortInicial ? 1000 : 2000);
